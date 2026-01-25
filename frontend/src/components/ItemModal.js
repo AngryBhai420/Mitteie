@@ -39,49 +39,44 @@ export default function ItemModal({ item, onSave, onClose }) {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
+    // STUB: Cloudinary not configured for MVP
+    toast.info("Filopplasting kommer i neste versjon");
+    e.target.value = null;
+    
+    // Uncomment below when Cloudinary keys are added:
+    /*
     setUploading(true);
-
     try {
       for (const file of files) {
-        // Determine resource type
         const isPDF = file.type === "application/pdf";
         const resourceType = isPDF ? "raw" : "image";
-
-        // Get signature
         const sigResponse = await fetch(
           `${BACKEND_URL}/api/cloudinary/signature?resource_type=${resourceType}`,
           { credentials: "include" }
         );
-
         if (!sigResponse.ok) throw new Error("Failed to get signature");
-
         const sig = await sigResponse.json();
-
-        // Upload to Cloudinary
         const formData = new FormData();
         formData.append("file", file);
         formData.append("api_key", sig.api_key);
         formData.append("timestamp", sig.timestamp);
         formData.append("signature", sig.signature);
         formData.append("folder", sig.folder);
-
         const uploadResponse = await fetch(
           `https://api.cloudinary.com/v1_1/${sig.cloud_name}/${resourceType}/upload`,
           { method: "POST", body: formData }
         );
-
         if (!uploadResponse.ok) throw new Error("Upload failed");
-
         const result = await uploadResponse.json();
         setVedlegg((prev) => [...prev, result.secure_url]);
       }
-
       toast.success("Fil(er) lastet opp");
     } catch (error) {
       toast.error("Opplasting mislyktes");
     } finally {
       setUploading(false);
     }
+    */
   };
 
   const handleRemoveAttachment = (index) => {
