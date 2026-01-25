@@ -5,34 +5,33 @@ export default function Landing() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
 
-  // Image configuration - easy to swap
-  // BILDETYPE 1: Oversiktsark med liste (flat lay) - brukes slide 1
-  // BILDETYPE 2: Naturlig skandinavisk hjem med eiendeler - brukes slide 4
+  // User-provided images - calm, documentary, pedagogical
   const slides = [
     {
       type: "image-text",
-      image: "https://images.pexels.com/photos/19905186/pexels-photo-19905186.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      image: "https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/h1pxsi3t_Stue.png",
       text: "Verdier finnes i både smått og stort.",
     },
     {
-      type: "pause",
-    },
-    {
       type: "text-only",
-      text: "Når de samles, blir de synlige.",
+      text: "Noen ting har verdi fordi de kostet noe.\nAndre fordi de betyr noe.\n\nOver tid blir det vanskelig å holde oversikten.",
     },
     {
       type: "image-text",
-      image: "https://images.unsplash.com/photo-1630706236319-87e9caec5b3a?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-      text: "Derfor samles eiendeler, dokumentasjon og verdi på ett sted.",
+      image: "https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/aksku1t0_Oversikt.png",
+      text: "Når ting samles, blir de synlige.",
     },
     {
       type: "text-only",
-      text: "Det meste finnes allerede – bare spredt.",
+      text: "Oversikt blir viktig når noe endrer seg.\n\nFlytting.\nArv.\nSkilsmisse.\nForsikring.\n\nEller bare fordi tid går.",
     },
     {
       type: "text-only",
-      text: "Når ting samles underveis, er oversikten allerede der.",
+      text: "Det meste finnes allerede.\n\nBare spredt.",
+    },
+    {
+      type: "text-only",
+      text: "Når ting samles underveis,\ner oversikten allerede der.",
     },
   ];
 
@@ -65,7 +64,7 @@ export default function Landing() {
         <div className="w-full max-w-3xl">
           {slide.type === "image-text" && (
             <div className="space-y-8 animate-fade-in">
-              {/* Image - contained, not hero */}
+              {/* Image */}
               <div className="rounded-2xl overflow-hidden mx-auto max-w-2xl shadow-md">
                 <div className="aspect-[4/3] overflow-hidden bg-white">
                   <img
@@ -83,13 +82,9 @@ export default function Landing() {
             </div>
           )}
 
-          {slide.type === "pause" && (
-            <div className="h-64 md:h-96 animate-fade-in" />
-          )}
-
           {slide.type === "text-only" && (
             <div className="text-center px-4 animate-fade-in">
-              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-playfair font-semibold text-foreground leading-tight tracking-tight">
+              <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playfair font-semibold text-foreground leading-relaxed tracking-tight whitespace-pre-line">
                 {slide.text}
               </p>
             </div>
@@ -132,7 +127,7 @@ export default function Landing() {
               className="px-8 py-3 rounded-full bg-muted hover:bg-muted-foreground/10 text-foreground font-inter text-sm transition-colors duration-300"
               data-testid="open-overview-btn"
             >
-              Åpne oversikten
+              Gå til oversikten
             </button>
           )}
 
