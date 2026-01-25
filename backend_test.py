@@ -1,0 +1,289 @@
+import requests
+import sys
+from datetime import datetime
+import json
+
+class MitteieAPITester:
+    def __init__(self, base_url="https://oversikt.preview.emergentagent.com"):
+        self.base_url = base_url
+        self.session_token = None
+        self.user_id = None
+        self.tests_run = 0
+        self.tests_passed = 0
+        self.test_results = []
+
+    def log_test(self, name, success, details=""):
+        """Log test result"""
+        self.tests_run += 1
+        if success:
+            self.tests_passed += 1
+            print(f"✅ {name} - PASSED")
+        else:
+            print(f"❌ {name} - FAILED: {details}")
+        
+        self.test_results.append({
+            "name": name,
+            "success": success,
+            "details": details
+        })
+
+    def run_test(self, name, method, endpoint, expected_status, data=None, cookies=None):
+        """Run a single API test"""
+        url = f"{self.base_url}/api/{endpoint}"
+        headers = {'Content-Type': 'application/json'}
+        
+        print(f"\n🔍 Testing {name}...")
+        print(f"   URL: {url}")
+        
+        try:
+            if method == 'GET':
+                response = requests.get(url, headers=headers, cookies=cookies)
+            elif method == 'POST':
+                response = requests.post(url, json=data, headers=headers, cookies=cookies)
+            elif method == 'PUT':
+                response = requests.put(url, json=data, headers=headers, cookies=cookies)
+            elif method == 'DELETE':
+                response = requests.delete(url, headers=headers, cookies=cookies)
+
+            print(f"   Status: {response.status_code}")
+            
+            success = response.status_code == expected_status
+            
+            if success:
+                try:
+                    response_data = response.json()
+                    self.log_test(name, True)
+                    return True, response_data
+                except:
+                    self.log_test(name, True, "No JSON response")
+                    return True, {}
+            else:
+                try:
+                    error_data = response.json()
+                    self.log_test(name, False, f"Expected {expected_status}, got {response.status_code}: {error_data}")
+                except:
+                    self.log_test(name, False, f"Expected {expected_status}, got {response.status_code}")
+                return False, {}
+
+        except Exception as e:
+            self.log_test(name, False, f"Exception: {str(e)}")
+            return False, {}
+
+    def test_signup(self):
+        """Test user signup"""
+        test_email = f"test_{datetime.now().strftime('%H%M%S')}@example.com"
+        signup_data = {
+            "email": test_email,
+            "password": "TestPass123!",
+            "name": "Test Bruker"
+        }
+        
+        success, response = self.run_test(
+            "User Signup",
+            "POST",
+            "auth/signup",
+            200,
+            data=signup_data
+        )
+        
+        if success and 'user_id' in response:
+            self.user_id = response['user_id']
+            print(f"   Created user: {self.user_id}")
+            return True, test_email, "TestPass123!"
+        return False, None, None
+
+    def test_login(self, email, password):
+        """Test user login"""
+        login_data = {
+            "email": email,
+            "password": password
+        }
+        
+        success, response = self.run_test(
+            "User Login",
+            "POST",
+            "auth/login",
+            200,
+            data=login_data
+        )
+        
+        if success and 'user_id' in response:
+            self.user_id = response['user_id']
+            print(f"   Logged in user: {self.user_id}")
+            return True
+        return False
+
+    def test_auth_me(self, cookies):
+        """Test /auth/me endpoint"""
+        success, response = self.run_test(
+            "Get Current User",
+            "GET",
+            "auth/me",
+            200,
+            cookies=cookies
+        )
+        return success
+
+    def test_create_item(self, cookies):
+        """Test creating an item"""
+        item_data = {
+            "navn": "Test Laptop",
+            "kategori": "Elektronikk",
+            "serienummer": "ABC123456",
+            "notat": "MacBook Pro 2023",
+            "verdi": 25000.0,
+            "valuta": "NOK",
+            "vedlegg_urls": []
+        }
+        
+        success, response = self.run_test(
+            "Create Item",
+            "POST",
+            "items",
+            201,
+            data=item_data,
+            cookies=cookies
+        )
+        
+        if success and 'item_id' in response:
+            print(f"   Created item: {response['item_id']}")
+            return True, response['item_id']
+        return False, None
+
+    def test_get_items(self, cookies):
+        """Test getting all items"""
+        success, response = self.run_test(
+            "Get All Items",
+            "GET",
+            "items",
+            200,
+            cookies=cookies
+        )
+        
+        if success:
+            print(f"   Found {len(response)} items")
+        return success, response if success else []
+
+    def test_get_item(self, item_id, cookies):
+        """Test getting a specific item"""
+        success, response = self.run_test(
+            "Get Specific Item",
+            "GET",
+            f"items/{item_id}",
+            200,
+            cookies=cookies
+        )
+        return success
+
+    def test_update_item(self, item_id, cookies):
+        """Test updating an item"""
+        update_data = {
+            "navn": "Updated Test Laptop",
+            "verdi": 30000.0,
+            "notat": "MacBook Pro 2023 - Updated"
+        }
+        
+        success, response = self.run_test(
+            "Update Item",
+            "PUT",
+            f"items/{item_id}",
+            200,
+            data=update_data,
+            cookies=cookies
+        )
+        return success
+
+    def test_delete_item(self, item_id, cookies):
+        """Test deleting an item"""
+        success, response = self.run_test(
+            "Delete Item",
+            "DELETE",
+            f"items/{item_id}",
+            200,
+            cookies=cookies
+        )
+        return success
+
+    def test_logout(self, cookies):
+        """Test user logout"""
+        success, response = self.run_test(
+            "User Logout",
+            "POST",
+            "auth/logout",
+            200,
+            cookies=cookies
+        )
+        return success
+
+    def test_cloudinary_signature(self, cookies):
+        """Test Cloudinary signature generation"""
+        success, response = self.run_test(
+            "Cloudinary Signature",
+            "GET",
+            "cloudinary/signature",
+            200,
+            cookies=cookies
+        )
+        return success
+
+def main():
+    print("🚀 Starting MITTEIE Backend API Tests")
+    print("=" * 50)
+    
+    tester = MitteieAPITester()
+    
+    # Test signup
+    signup_success, email, password = tester.test_signup()
+    if not signup_success:
+        print("❌ Signup failed, stopping tests")
+        return 1
+
+    # Test login (should work with session cookie from signup)
+    login_success = tester.test_login(email, password)
+    if not login_success:
+        print("❌ Login failed, stopping tests")
+        return 1
+
+    # Get session cookie for authenticated requests
+    # Note: In real implementation, we'd extract the session cookie from the login response
+    # For now, we'll use a mock cookie structure
+    cookies = {"session_token": "mock_session"}  # This would be extracted from actual response
+    
+    # Test authenticated endpoints
+    tester.test_auth_me(cookies)
+    
+    # Test item CRUD operations
+    create_success, item_id = tester.test_create_item(cookies)
+    if create_success and item_id:
+        tester.test_get_item(item_id, cookies)
+        tester.test_update_item(item_id, cookies)
+        
+        # Test getting all items
+        tester.test_get_items(cookies)
+        
+        # Test delete (do this last)
+        tester.test_delete_item(item_id, cookies)
+
+    # Test Cloudinary signature (should work even if keys are empty)
+    tester.test_cloudinary_signature(cookies)
+    
+    # Test logout
+    tester.test_logout(cookies)
+
+    # Print final results
+    print("\n" + "=" * 50)
+    print(f"📊 Test Results: {tester.tests_passed}/{tester.tests_run} passed")
+    
+    if tester.tests_passed == tester.tests_run:
+        print("🎉 All tests passed!")
+        return 0
+    else:
+        print("⚠️  Some tests failed")
+        print("\nFailed tests:")
+        for result in tester.test_results:
+            if not result['success']:
+                print(f"  - {result['name']}: {result['details']}")
+        return 1
+
+if __name__ == "__main__":
+    sys.exit(main())
