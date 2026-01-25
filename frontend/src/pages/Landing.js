@@ -5,16 +5,17 @@ export default function Landing() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
 
-  // Slide structure: 6 slides total, only 2 have images (slide 1 and 4)
+  // Image configuration - easy to swap
+  // BILDETYPE 1: Oversiktsark med liste (flat lay) - brukes slide 1
+  // BILDETYPE 2: Naturlig skandinavisk hjem med eiendeler - brukes slide 4
   const slides = [
     {
       type: "image-text",
-      image: "https://images.unsplash.com/photo-1693091608581-7e500563225f?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+      image: "https://images.pexels.com/photos/19905186/pexels-photo-19905186.jpeg?auto=compress&cs=tinysrgb&w=1200",
       text: "Verdier finnes i både smått og stort.",
     },
     {
       type: "pause",
-      // No image, no text - just breathing space
     },
     {
       type: "text-only",
@@ -22,7 +23,7 @@ export default function Landing() {
     },
     {
       type: "image-text",
-      image: "https://images.unsplash.com/photo-1552774409-e044d1adc7a8?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+      image: "https://images.unsplash.com/photo-1630706236319-87e9caec5b3a?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
       text: "Derfor samles eiendeler, dokumentasjon og verdi på ett sted.",
     },
     {
@@ -64,9 +65,9 @@ export default function Landing() {
         <div className="w-full max-w-3xl">
           {slide.type === "image-text" && (
             <div className="space-y-8 animate-fade-in">
-              {/* Image Card - contained, not full-bleed */}
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden mx-auto max-w-2xl">
-                <div className="aspect-[4/3] overflow-hidden">
+              {/* Image - contained, not hero */}
+              <div className="rounded-2xl overflow-hidden mx-auto max-w-2xl shadow-md">
+                <div className="aspect-[4/3] overflow-hidden bg-white">
                   <img
                     src={slide.image}
                     alt=""
