@@ -1,0 +1,137 @@
+{
+  "identity": {
+    "name": "MITTEIE",
+    "vision": "A calm, explanatory asset management experience. Not a sales pitch, but a tool for peace of mind.",
+    "tone": "Norwegian, Calm, Human, Organic, Non-salesy.",
+    "keywords": ["Oversikt", "Samle", "Ta vare på", "Underveis", "Rolig"]
+  },
+  "design_principles": {
+    "theme": "Light Mode (Warm/Organic)",
+    "core_concept": "The Anti-SaaS. No dashboards, no widgets, no 'optimize your life'. Just a calm list of what you own.",
+    "visual_style": "Warm Minimalism. Earthy tones. Soft shadows. Generous whitespace.",
+    "anti_patterns": [
+      "No dark mode (unless strictly necessary for accessibility, but keep it warm grey)",
+      "No 'Tech Blue' or 'SaaS Purple'",
+      "No gradients (unless very subtle and natural)",
+      "No sharp edges (use rounded corners)",
+      "No 'Call to Action' language (e.g., 'Get Started', 'Sign Up Now')"
+    ]
+  },
+  "colors": {
+    "palette": {
+      "background": "#FDFCF8",
+      "foreground": "#2C2825",
+      "primary": "#4A453E",
+      "primary_foreground": "#FDFCF8",
+      "secondary": "#E6E2D6",
+      "secondary_foreground": "#2C2825",
+      "muted": "#F2F0E9",
+      "muted_foreground": "#78736D",
+      "accent": "#8B9D83",
+      "accent_foreground": "#FFFFFF",
+      "border": "#E6E2D6",
+      "input": "#E6E2D6",
+      "ring": "#8B9D83"
+    },
+    "usage": {
+      "background": "Use for main page backgrounds. A warm, off-white.",
+      "foreground": "Use for primary text. A deep, warm charcoal.",
+      "primary": "Use for primary buttons and key actions. A soft, dark brown/grey.",
+      "secondary": "Use for secondary buttons and cards. A warm sand color.",
+      "accent": "Use for highlights, success states, and active elements. A muted olive green."
+    }
+  },
+  "typography": {
+    "headings": {
+      "font_family": "Playfair Display, serif",
+      "weight": "600",
+      "style": "Human, Editorial, Storytelling",
+      "usage": "Use for all major headings (H1-H3). This carries the 'calm' vibe."
+    },
+    "body": {
+      "font_family": "Inter, sans-serif",
+      "weight": "400",
+      "style": "Clean, Readable, Functional",
+      "usage": "Use for all UI text, lists, and forms."
+    },
+    "scale": {
+      "h1": "text-4xl md:text-5xl tracking-tight",
+      "h2": "text-3xl md:text-4xl tracking-tight",
+      "h3": "text-2xl md:text-3xl",
+      "body": "text-base md:text-lg leading-relaxed",
+      "small": "text-sm text-muted-foreground"
+    }
+  },
+  "layout": {
+    "grid_system": "Bento Grid (Organic)",
+    "container": "max-w-5xl mx-auto px-6 md:px-12",
+    "spacing": {
+      "section_gap": "py-24 md:py-32",
+      "item_gap": "gap-6 md:gap-8",
+      "internal_padding": "p-6 md:p-8"
+    },
+    "rules": [
+      "Use generous whitespace. Don't crowd the interface.",
+      "Center content for storytelling (Landing), Left-align for lists (App).",
+      "Use 'masonry' or 'bento' layouts for the item list to avoid a boring spreadsheet look."
+    ]
+  },
+  "components": {
+    "buttons": {
+      "style": "Pill-shaped or Soft Rounded (rounded-full or rounded-xl)",
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      "ghost": "hover:bg-muted text-foreground"
+    },
+    "cards": {
+      "style": "Flat with subtle border or very soft shadow",
+      "classes": "bg-white border border-border/50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+    },
+    "inputs": {
+      "style": "Minimalist, soft background",
+      "classes": "bg-muted/50 border-transparent focus:border-accent focus:ring-0 rounded-lg"
+    },
+    "navigation": {
+      "style": "Floating, Glassmorphism (Warm)",
+      "classes": "fixed top-6 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 shadow-sm z-50"
+    }
+  },
+  "images": {
+    "style": "Natural light, warm tones, simple household objects. No people faces (keep it abstract/universal).",
+    "hero": {
+      "url": "https://images.unsplash.com/photo-1563443395-34633f828d0f?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "alt": "White vase with yellow flowers in sunlight",
+      "usage": "Landing page hero background or main visual."
+    },
+    "auth": {
+      "url": "https://images.unsplash.com/photo-1685545517667-b7f8e77c5f5d?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "alt": "Plant on stack of books",
+      "usage": "Side image for Login/Signup pages."
+    },
+    "empty_state": {
+      "url": "https://images.unsplash.com/photo-1722080668634-6b8198f68887?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "alt": "Simple wooden chairs",
+      "usage": "Displayed when the user has no items."
+    }
+  },
+  "motion": {
+    "philosophy": "Slow, Smooth, Organic. No fast 'zaps'.",
+    "transitions": "transition-all duration-500 ease-out",
+    "entrance": "animate-in fade-in slide-in-from-bottom-4 duration-700"
+  },
+  "instructions_to_main_agent": [
+    "1. SETUP: Install 'lucide-react' for icons. Use 'Playfair Display' from Google Fonts.",
+    "2. THEME: Implement the custom color palette in 'tailwind.config.js' immediately. Override the default 'shadcn' colors.",
+    "3. LANDING: Build a multi-slide storytelling experience. Use the 'hero' image. Text should be minimal and centered.",
+    "4. AUTH: Create simple Login/Signup pages. Use the 'auth' image. No social login clutter (unless secondary).",
+    "5. APP: The main view is 'Oversikt'. It should look like a curated collection, not a database. Use the 'cards' component style.",
+    "6. EXPORT: Create a print-friendly view. This should be stark white, high contrast, purely functional.",
+    "7. LANGUAGE: STRICTLY NORWEGIAN. Use the provided keywords.",
+    "8. TESTING: Add 'data-testid' to all interactive elements."
+  ],
+  "universal_guidelines": {
+    "do_not_use": ["Gradients", "Box-shadows (heavy)", "Pure Black (#000000)", "Default Blue"],
+    "accessibility": "Ensure contrast ratios are met. The text is dark grey (#2C2825), background is off-white (#FDFCF8).",
+    "code_style": "Use functional React components. Keep files small. Use 'shadcn' components but customize the classes via 'cn()'."
+  }
+}
