@@ -81,39 +81,41 @@ export default function Export() {
       </div>
 
       {/* Print content */}
-      <div className="max-w-4xl mx-auto px-12 py-12">
-        <div className="mb-8">
-          <p className="text-base text-muted-foreground font-inter leading-relaxed mb-6">
+      <div className="max-w-3xl mx-auto px-12 py-16">
+        {/* Intro text */}
+        <div className="mb-16 max-w-lg space-y-4">
+          <p className="text-base text-foreground font-inter leading-relaxed">
             Når ting endrer seg, er det greit å ha oversikten samlet.
           </p>
-          <p className="text-sm text-muted-foreground font-inter">
+          <p className="text-base text-muted-foreground font-inter leading-relaxed">
             Du kan ta den med deg, og komme tilbake senere.
           </p>
         </div>
 
-        <div className="mb-12 border-t border-border pt-8">
-          <h1 className="text-4xl font-playfair font-bold text-foreground mb-2">
+        {/* Header */}
+        <div className="mb-12 pb-8 border-b border-border/30">
+          <h1 className="text-3xl font-playfair font-semibold text-foreground mb-3">
             MITTEIE
           </h1>
-          <p className="text-lg text-muted-foreground font-inter">
+          <p className="text-base text-muted-foreground font-inter mb-2">
             Oversikt over eiendeler
           </p>
           {user && (
-            <p className="text-sm text-muted-foreground font-inter mt-2">
-              {user.name} ({user.email})
+            <p className="text-sm text-muted-foreground font-inter">
+              {user.name} · {user.email}
             </p>
           )}
-          <p className="text-sm text-muted-foreground font-inter">
+          <p className="text-sm text-muted-foreground font-inter mt-2">
             {new Date().toLocaleDateString("nb-NO")}
           </p>
         </div>
 
         {totalValue > 0 && (
-          <div className="mb-8 p-6 border-2 border-foreground rounded">
+          <div className="mb-12 p-6 border border-border/30 rounded-lg">
             <p className="text-sm text-muted-foreground font-inter mb-1">
               Samlet verdi
             </p>
-            <p className="text-3xl font-playfair font-bold text-foreground">
+            <p className="text-2xl font-playfair font-semibold text-foreground">
               {totalValue.toLocaleString("nb-NO")} kr
             </p>
           </div>
