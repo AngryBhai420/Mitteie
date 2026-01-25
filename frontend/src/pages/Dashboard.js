@@ -251,10 +251,10 @@ export default function Dashboard() {
           <div className="text-center py-24">
             <div className="max-w-md mx-auto">
               <div
-                className="aspect-[4/3] mb-8 rounded-xl overflow-hidden bg-muted"
+                className="aspect-[4/3] mb-8 rounded-xl overflow-hidden shadow-md"
                 style={{
                   backgroundImage:
-                    "url('https://images.pexels.com/photos/7718871/pexels-photo-7718871.jpeg?auto=compress&cs=tinysrgb&w=800')",
+                    "url('https://images.pexels.com/photos/19905186/pexels-photo-19905186.jpeg?auto=compress&cs=tinysrgb&w=800')",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
