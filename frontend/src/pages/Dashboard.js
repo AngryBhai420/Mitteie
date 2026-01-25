@@ -254,7 +254,7 @@ export default function Dashboard() {
                 className="aspect-[4/3] mb-8 rounded-xl overflow-hidden bg-muted"
                 style={{
                   backgroundImage:
-                    "url('https://images.unsplash.com/photo-1722080668634-6b8198f68887?crop=entropy&cs=srgb&fm=jpg&q=85&w=800')",
+                    "url('https://images.pexels.com/photos/7718871/pexels-photo-7718871.jpeg?auto=compress&cs=tinysrgb&w=800')",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
@@ -262,13 +262,13 @@ export default function Dashboard() {
               <p className="text-lg text-muted-foreground font-inter mb-6">
                 Ingen eiendeler ennå. Legg til noe for å samle oversikten.
               </p>
-              <Button
+              <button
                 onClick={handleAddClick}
-                className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-inter px-8 py-6"
+                className="px-8 py-3 rounded-full bg-accent text-accent-foreground hover:bg-accent/90 font-inter transition-colors duration-300"
                 data-testid="empty-add-item-btn"
               >
                 Legg til første eiendel
-              </Button>
+              </button>
             </div>
           </div>
         ) : (
