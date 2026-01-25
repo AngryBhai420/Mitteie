@@ -80,7 +80,7 @@ class MitteieAPITester:
             self.log_test(name, False, f"Exception: {str(e)}")
             return False, {}, None
 
-    def test_signup(self):
+    def test_signup(self, session):
         """Test user signup"""
         test_email = f"test_{datetime.now().strftime('%H%M%S')}@example.com"
         signup_data = {
@@ -89,12 +89,13 @@ class MitteieAPITester:
             "name": "Test Bruker"
         }
         
-        success, response = self.run_test(
+        success, response, resp_obj = self.run_test(
             "User Signup",
             "POST",
             "auth/signup",
             200,
-            data=signup_data
+            data=signup_data,
+            session=session
         )
         
         if success and 'user_id' in response:
@@ -103,19 +104,20 @@ class MitteieAPITester:
             return True, test_email, "TestPass123!"
         return False, None, None
 
-    def test_login(self, email, password):
+    def test_login(self, email, password, session):
         """Test user login"""
         login_data = {
             "email": email,
             "password": password
         }
         
-        success, response = self.run_test(
+        success, response, resp_obj = self.run_test(
             "User Login",
             "POST",
             "auth/login",
             200,
-            data=login_data
+            data=login_data,
+            session=session
         )
         
         if success and 'user_id' in response:
@@ -124,18 +126,18 @@ class MitteieAPITester:
             return True
         return False
 
-    def test_auth_me(self, cookies):
+    def test_auth_me(self, session):
         """Test /auth/me endpoint"""
-        success, response = self.run_test(
+        success, response, resp_obj = self.run_test(
             "Get Current User",
             "GET",
             "auth/me",
             200,
-            cookies=cookies
+            session=session
         )
         return success
 
-    def test_create_item(self, cookies):
+    def test_create_item(self, session):
         """Test creating an item"""
         item_data = {
             "navn": "Test Laptop",
@@ -147,13 +149,13 @@ class MitteieAPITester:
             "vedlegg_urls": []
         }
         
-        success, response = self.run_test(
+        success, response, resp_obj = self.run_test(
             "Create Item",
             "POST",
             "items",
             201,
             data=item_data,
-            cookies=cookies
+            session=session
         )
         
         if success and 'item_id' in response:
@@ -161,32 +163,32 @@ class MitteieAPITester:
             return True, response['item_id']
         return False, None
 
-    def test_get_items(self, cookies):
+    def test_get_items(self, session):
         """Test getting all items"""
-        success, response = self.run_test(
+        success, response, resp_obj = self.run_test(
             "Get All Items",
             "GET",
             "items",
             200,
-            cookies=cookies
+            session=session
         )
         
         if success:
             print(f"   Found {len(response)} items")
         return success, response if success else []
 
-    def test_get_item(self, item_id, cookies):
+    def test_get_item(self, item_id, session):
         """Test getting a specific item"""
-        success, response = self.run_test(
+        success, response, resp_obj = self.run_test(
             "Get Specific Item",
             "GET",
             f"items/{item_id}",
             200,
-            cookies=cookies
+            session=session
         )
         return success
 
-    def test_update_item(self, item_id, cookies):
+    def test_update_item(self, item_id, session):
         """Test updating an item"""
         update_data = {
             "navn": "Updated Test Laptop",
@@ -194,46 +196,46 @@ class MitteieAPITester:
             "notat": "MacBook Pro 2023 - Updated"
         }
         
-        success, response = self.run_test(
+        success, response, resp_obj = self.run_test(
             "Update Item",
             "PUT",
             f"items/{item_id}",
             200,
             data=update_data,
-            cookies=cookies
+            session=session
         )
         return success
 
-    def test_delete_item(self, item_id, cookies):
+    def test_delete_item(self, item_id, session):
         """Test deleting an item"""
-        success, response = self.run_test(
+        success, response, resp_obj = self.run_test(
             "Delete Item",
             "DELETE",
             f"items/{item_id}",
             200,
-            cookies=cookies
+            session=session
         )
         return success
 
-    def test_logout(self, cookies):
+    def test_logout(self, session):
         """Test user logout"""
-        success, response = self.run_test(
+        success, response, resp_obj = self.run_test(
             "User Logout",
             "POST",
             "auth/logout",
             200,
-            cookies=cookies
+            session=session
         )
         return success
 
-    def test_cloudinary_signature(self, cookies):
+    def test_cloudinary_signature(self, session):
         """Test Cloudinary signature generation"""
-        success, response = self.run_test(
+        success, response, resp_obj = self.run_test(
             "Cloudinary Signature",
             "GET",
             "cloudinary/signature",
             200,
-            cookies=cookies
+            session=session
         )
         return success
 
