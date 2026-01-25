@@ -5,34 +5,13 @@ export default function Landing() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
 
-  // User-provided images - calm, documentary, pedagogical
   const slides = [
-    {
-      type: "image-text",
-      image: "https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/h1pxsi3t_Stue.png",
-      text: "Verdier finnes i både smått og stort.",
-    },
-    {
-      type: "text-only",
-      text: "Noen ting har verdi fordi de kostet noe.\nAndre fordi de betyr noe.\n\nOver tid blir det vanskelig å holde oversikten.",
-    },
-    {
-      type: "image-text",
-      image: "https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/aksku1t0_Oversikt.png",
-      text: "Når ting samles, blir de synlige.",
-    },
-    {
-      type: "text-only",
-      text: "Oversikt blir viktig når noe endrer seg.\n\nFlytting.\nArv.\nSkilsmisse.\nForsikring.\n\nEller bare fordi tid går.",
-    },
-    {
-      type: "text-only",
-      text: "Det meste finnes allerede.\n\nBare spredt.",
-    },
-    {
-      type: "text-only",
-      text: "Når ting samles underveis,\ner oversikten allerede der.",
-    },
+    { type: "image-text", slide: 1 },
+    { type: "reflection", slide: 2 },
+    { type: "image-text", slide: 3 },
+    { type: "consequence", slide: 4 },
+    { type: "transition", slide: 5 },
+    { type: "closing", slide: 6 },
   ];
 
   const handleNext = () => {
@@ -53,57 +32,137 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="px-6 py-6 md:px-12">
-        <h1 className="text-2xl font-playfair font-semibold tracking-tight text-foreground">
+      <header className="px-8 py-8 md:px-16 md:py-10">
+        <h1 className="text-xl font-playfair font-semibold tracking-tight text-foreground">
           MITTEIE
         </h1>
       </header>
 
       {/* Content Area */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 md:px-12 py-8">
-        <div className="w-full max-w-3xl">
-          {slide.type === "image-text" && (
-            <div className="space-y-8 animate-fade-in">
-              {/* Image */}
-              <div className="rounded-2xl overflow-hidden mx-auto max-w-2xl shadow-md">
-                <div className="aspect-[4/3] overflow-hidden bg-white">
-                  <img
-                    src={slide.image}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              {/* Text below image */}
-              <p className="text-center text-lg sm:text-xl md:text-2xl text-foreground font-inter leading-relaxed px-4">
-                {slide.text}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 md:py-16">
+        {/* Slide 1 - Stue image */}
+        {slide.type === "image-text" && slide.slide === 1 && (
+          <div className="w-full max-w-2xl space-y-12 animate-fade-in">
+            <div className="rounded-3xl overflow-hidden shadow-sm">
+              <img
+                src="https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/h1pxsi3t_Stue.png"
+                alt=""
+                className="w-full h-auto"
+                style={{ maxHeight: "65vh", objectFit: "cover" }}
+              />
+            </div>
+            <div className="max-w-md mx-auto">
+              <p className="text-2xl md:text-3xl font-playfair text-foreground leading-relaxed text-center">
+                Verdier finnes i både smått og stort
               </p>
             </div>
-          )}
+          </div>
+        )}
 
-          {slide.type === "text-only" && (
-            <div className="text-center px-4 animate-fade-in">
-              <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playfair font-semibold text-foreground leading-relaxed tracking-tight whitespace-pre-line">
-                {slide.text}
+        {/* Slide 2 - Reflection */}
+        {slide.type === "reflection" && (
+          <div className="w-full max-w-lg space-y-16 animate-fade-in px-4">
+            <div className="space-y-3">
+              <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed">
+                Noen ting har verdi fordi de kostet noe.
+              </p>
+              <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed">
+                Andre fordi de betyr noe.
               </p>
             </div>
-          )}
-        </div>
+            
+            <div className="pt-8">
+              <p className="text-lg md:text-xl font-inter text-muted-foreground leading-relaxed">
+                Over tid blir det vanskelig å holde oversikten.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Slide 3 - Oversikt image */}
+        {slide.type === "image-text" && slide.slide === 3 && (
+          <div className="w-full max-w-xl space-y-12 animate-fade-in">
+            <div className="rounded-2xl overflow-hidden shadow-sm">
+              <img
+                src="https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/aksku1t0_Oversikt.png"
+                alt=""
+                className="w-full h-auto"
+                style={{ maxHeight: "55vh", objectFit: "cover" }}
+              />
+            </div>
+            <div className="max-w-md mx-auto">
+              <p className="text-2xl md:text-3xl font-playfair text-foreground leading-relaxed text-center">
+                Når ting samles, blir de synlige
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Slide 4 - Consequence */}
+        {slide.type === "consequence" && (
+          <div className="w-full max-w-lg space-y-16 animate-fade-in px-4">
+            <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed">
+              Oversikt blir viktig når noe endrer seg.
+            </p>
+            
+            <div className="space-y-4 pl-6">
+              <p className="text-lg md:text-xl font-inter text-foreground leading-relaxed">
+                Flytting.
+              </p>
+              <p className="text-lg md:text-xl font-inter text-foreground leading-relaxed">
+                Arv.
+              </p>
+              <p className="text-lg md:text-xl font-inter text-foreground leading-relaxed">
+                Skilsmisse.
+              </p>
+              <p className="text-lg md:text-xl font-inter text-foreground leading-relaxed">
+                Forsikring.
+              </p>
+            </div>
+            
+            <p className="text-lg md:text-xl font-inter text-muted-foreground leading-relaxed pt-8">
+              Eller bare fordi tid går.
+            </p>
+          </div>
+        )}
+
+        {/* Slide 5 - Transition */}
+        {slide.type === "transition" && (
+          <div className="w-full max-w-md space-y-12 animate-fade-in px-4">
+            <p className="text-lg md:text-xl font-inter text-muted-foreground leading-loose opacity-75">
+              Det meste finnes allerede.
+            </p>
+            
+            <div className="h-24"></div>
+            
+            <p className="text-lg md:text-xl font-inter text-muted-foreground leading-loose opacity-75">
+              Bare spredt.
+            </p>
+          </div>
+        )}
+
+        {/* Slide 6 - Closing */}
+        {slide.type === "closing" && (
+          <div className="w-full max-w-lg space-y-20 animate-fade-in px-4">
+            <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed">
+              Når ting samles underveis, er oversikten allerede der.
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* Navigation Footer */}
-      <div className="px-6 py-8 md:px-12 flex flex-col items-center space-y-6 border-t border-border/30">
+      {/* Footer Navigation */}
+      <div className="px-8 py-10 md:py-12 flex flex-col items-center space-y-8">
         {/* Progress Dots */}
         <div className="flex space-x-2">
           {slides.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`h-2 rounded-full transition-all duration-500 ${
+              className={`h-1.5 rounded-full transition-all duration-500 ${
                 index === currentSlide
-                  ? "bg-accent w-8"
-                  : "bg-border w-2 hover:bg-muted-foreground/50"
+                  ? "bg-accent/60 w-8"
+                  : "bg-border/50 w-1.5 hover:bg-muted-foreground/30"
               }`}
               data-testid={`slide-dot-${index}`}
               aria-label={`Gå til slide ${index + 1}`}
@@ -111,12 +170,12 @@ export default function Landing() {
           ))}
         </div>
 
-        {/* Navigation Controls */}
-        <div className="flex flex-col items-center gap-4">
+        {/* Single Action */}
+        <div className="flex flex-col items-center gap-6">
           {!isLastSlide ? (
             <button
               onClick={handleNext}
-              className="px-8 py-3 rounded-full bg-muted hover:bg-muted-foreground/10 text-foreground font-inter text-sm transition-colors duration-300"
+              className="px-10 py-3 rounded-full bg-muted/50 hover:bg-muted/70 text-foreground/70 font-inter text-sm transition-all duration-500"
               data-testid="next-slide-btn"
             >
               Neste
@@ -124,18 +183,17 @@ export default function Landing() {
           ) : (
             <button
               onClick={() => navigate("/dashboard")}
-              className="px-8 py-3 rounded-full bg-muted hover:bg-muted-foreground/10 text-foreground font-inter text-sm transition-colors duration-300"
+              className="px-10 py-3 rounded-full bg-muted/50 hover:bg-muted/70 text-foreground/70 font-inter text-sm transition-all duration-500"
               data-testid="open-overview-btn"
             >
               Gå til oversikten
             </button>
           )}
 
-          {/* Subtle back link */}
           {currentSlide > 0 && (
             <button
               onClick={handlePrevious}
-              className="text-sm text-muted-foreground hover:text-foreground font-inter transition-colors"
+              className="text-xs text-muted-foreground/60 hover:text-foreground/50 font-inter transition-colors duration-300"
               data-testid="previous-slide-btn"
             >
               Tilbake
