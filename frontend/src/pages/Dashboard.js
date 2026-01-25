@@ -214,38 +214,22 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">
-        <div className="mb-8">
-          <h2 className="text-3xl md:text-4xl font-playfair font-semibold text-foreground tracking-tight mb-3">
+        {/* Intro Section */}
+        <div className="mb-16 max-w-lg">
+          <h2 className="text-3xl md:text-4xl font-playfair font-semibold text-foreground tracking-tight mb-6">
             Oversikt
           </h2>
-          {isAuthenticated && user ? (
-            <p className="text-muted-foreground mt-2 font-inter">
-              {user.name}
-            </p>
-          ) : (
-            <p className="text-muted-foreground mt-2 font-inter leading-relaxed">
+          {!isAuthenticated && (
+            <p className="text-base md:text-lg text-muted-foreground font-inter leading-relaxed">
               Samle det viktigste underveis.<br />
               Resten kan vente.
             </p>
           )}
         </div>
 
-        {isAuthenticated && (
-          <div className="mb-8 flex justify-end">
-            <Button
-              onClick={handleAddClick}
-              className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-inter shadow-md"
-              data-testid="add-item-btn"
-            >
-              <Plus className="mr-2 h-5 w-5" />
-              Legg til
-            </Button>
-          </div>
-        )}
-
         {totalValue > 0 && (
-          <div className="mb-8 p-6 bg-white border border-border rounded-xl shadow-sm">
-            <p className="text-sm text-muted-foreground font-inter mb-1">
+          <div className="mb-12 p-8 bg-white/50 border border-border/30 rounded-2xl">
+            <p className="text-sm text-muted-foreground font-inter mb-2">
               Samlet verdi
             </p>
             <p className="text-3xl font-playfair font-semibold text-foreground">
@@ -255,10 +239,10 @@ export default function Dashboard() {
         )}
 
         {items.length === 0 ? (
-          <div className="text-center py-24">
-            <div className="max-w-md mx-auto">
+          <div className="text-center py-32">
+            <div className="max-w-lg mx-auto space-y-12">
               <div
-                className="aspect-[4/3] mb-8 rounded-xl overflow-hidden shadow-md"
+                className="aspect-[4/3] rounded-2xl overflow-hidden shadow-sm"
                 style={{
                   backgroundImage:
                     "url('https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/aksku1t0_Oversikt.png')",
@@ -266,41 +250,43 @@ export default function Dashboard() {
                   backgroundPosition: "center",
                 }}
               ></div>
-              <p className="text-lg text-muted-foreground font-inter mb-2">
-                Ingen eiendeler ennå.
-              </p>
-              <p className="text-sm text-muted-foreground font-inter mb-6">
-                Legg til noe for å samle oversikten.
-              </p>
-              {isAuthenticated ? (
-                <button
-                  onClick={handleAddClick}
-                  className="px-8 py-3 rounded-full bg-accent text-accent-foreground hover:bg-accent/90 font-inter transition-colors duration-300"
-                  data-testid="empty-add-item-btn"
-                >
-                  Legg til første eiendel
-                </button>
-              ) : (
-                <button
-                  onClick={handleAddClick}
-                  className="px-8 py-3 rounded-full bg-muted hover:bg-muted-foreground/10 text-foreground font-inter transition-colors duration-300"
-                  data-testid="empty-add-item-btn"
-                >
-                  Legg til første eiendel
-                </button>
+              
+              {isAuthenticated && (
+                <div className="pt-8">
+                  <button
+                    onClick={handleAddClick}
+                    className="px-10 py-3 rounded-full bg-muted/50 hover:bg-muted/70 text-foreground/70 font-inter text-sm transition-all duration-500"
+                    data-testid="empty-add-item-btn"
+                  >
+                    Legg til første eiendel
+                  </button>
+                </div>
               )}
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {items.map((item) => (
-              <ItemCard
-                key={item.item_id}
-                item={item}
-                onEdit={() => handleEditClick(item)}
-                onDelete={() => handleDeleteItem(item.item_id)}
-              />
-            ))}
+          <div>
+            {isAuthenticated && (
+              <div className="mb-8 flex justify-end">
+                <button
+                  onClick={handleAddClick}
+                  className="px-8 py-3 rounded-full bg-muted/50 hover:bg-muted/70 text-foreground/70 font-inter text-sm transition-all duration-500"
+                  data-testid="add-item-btn"
+                >
+                  Legg til
+                </button>
+              </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {items.map((item) => (
+                <ItemCard
+                  key={item.item_id}
+                  item={item}
+                  onEdit={() => handleEditClick(item)}
+                  onDelete={() => handleDeleteItem(item.item_id)}
+                />
+              ))}
+            </div>
           </div>
         )}
       </main>
