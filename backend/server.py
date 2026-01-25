@@ -382,7 +382,7 @@ async def get_items(user: User = Depends(get_current_user)):
     
     return items
 
-@api_router.post("/items", response_model=Item)
+@api_router.post("/items", response_model=Item, status_code=201)
 async def create_item(data: ItemCreate, user: User = Depends(get_current_user)):
     item_id = f"item_{uuid.uuid4().hex[:12]}"
     now = datetime.now(timezone.utc)
