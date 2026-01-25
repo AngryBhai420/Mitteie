@@ -13,28 +13,28 @@ export default function RequireAuthModal({ onClose }) {
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="bg-white rounded-2xl max-w-md">
+      <DialogContent className="bg-background rounded-3xl max-w-md border-border/30">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-playfair font-semibold">
+          <DialogTitle className="text-2xl font-playfair font-semibold text-foreground">
             Konto trengs
           </DialogTitle>
-          <DialogDescription className="font-inter text-base leading-relaxed pt-2">
+          <DialogDescription className="font-inter text-base leading-relaxed pt-3 text-muted-foreground">
             Konto trengs først når noe skal lagres.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col space-y-3 mt-4">
+        <div className="flex flex-col space-y-3 mt-6">
           <Button
             onClick={() => navigate("/signup")}
-            className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-inter py-6"
+            className="bg-muted/50 hover:bg-muted/70 text-foreground/70 rounded-full font-inter py-6"
             data-testid="require-auth-signup-btn"
           >
             Opprett konto
           </Button>
           <Button
             onClick={() => navigate("/login")}
-            variant="outline"
-            className="rounded-full font-inter py-6"
+            variant="ghost"
+            className="text-muted-foreground/70 hover:text-foreground/60 rounded-full font-inter py-6"
             data-testid="require-auth-login-btn"
           >
             Logg inn
@@ -42,7 +42,7 @@ export default function RequireAuthModal({ onClose }) {
           <Button
             onClick={onClose}
             variant="ghost"
-            className="rounded-full font-inter"
+            className="text-muted-foreground/50 hover:text-foreground/40 rounded-full font-inter text-sm pt-4"
             data-testid="require-auth-cancel-btn"
           >
             Ikke nå
