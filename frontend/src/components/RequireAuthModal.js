@@ -19,8 +19,7 @@ export default function RequireAuthModal({ onClose }) {
             Konto trengs
           </DialogTitle>
           <DialogDescription className="font-inter text-base leading-relaxed pt-2">
-            Konto trengs først når noe skal lagres. Opprett en konto eller logg
-            inn for å samle oversikten.
+            Konto trengs først når noe skal lagres.
           </DialogDescription>
         </DialogHeader>
 
