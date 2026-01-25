@@ -245,43 +245,41 @@ def main():
     
     tester = MitteieAPITester()
     
+    # Create a session to maintain cookies
+    session = requests.Session()
+    
     # Test signup
-    signup_success, email, password = tester.test_signup()
+    signup_success, email, password = tester.test_signup(session)
     if not signup_success:
         print("❌ Signup failed, stopping tests")
         return 1
 
     # Test login (should work with session cookie from signup)
-    login_success = tester.test_login(email, password)
+    login_success = tester.test_login(email, password, session)
     if not login_success:
         print("❌ Login failed, stopping tests")
         return 1
-
-    # Get session cookie for authenticated requests
-    # Note: In real implementation, we'd extract the session cookie from the login response
-    # For now, we'll use a mock cookie structure
-    cookies = {"session_token": "mock_session"}  # This would be extracted from actual response
     
     # Test authenticated endpoints
-    tester.test_auth_me(cookies)
+    tester.test_auth_me(session)
     
     # Test item CRUD operations
-    create_success, item_id = tester.test_create_item(cookies)
+    create_success, item_id = tester.test_create_item(session)
     if create_success and item_id:
-        tester.test_get_item(item_id, cookies)
-        tester.test_update_item(item_id, cookies)
+        tester.test_get_item(item_id, session)
+        tester.test_update_item(item_id, session)
         
         # Test getting all items
-        tester.test_get_items(cookies)
+        tester.test_get_items(session)
         
         # Test delete (do this last)
-        tester.test_delete_item(item_id, cookies)
+        tester.test_delete_item(item_id, session)
 
     # Test Cloudinary signature (should work even if keys are empty)
-    tester.test_cloudinary_signature(cookies)
+    tester.test_cloudinary_signature(session)
     
     # Test logout
-    tester.test_logout(cookies)
+    tester.test_logout(session)
 
     # Print final results
     print("\n" + "=" * 50)
