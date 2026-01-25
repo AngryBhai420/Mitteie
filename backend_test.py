@@ -27,7 +27,7 @@ class MitteieAPITester:
             "details": details
         })
 
-    def run_test(self, name, method, endpoint, expected_status, data=None, cookies=None):
+    def run_test(self, name, method, endpoint, expected_status, data=None, session=None):
         """Run a single API test"""
         url = f"{self.base_url}/api/{endpoint}"
         headers = {'Content-Type': 'application/json'}
@@ -36,14 +36,25 @@ class MitteieAPITester:
         print(f"   URL: {url}")
         
         try:
-            if method == 'GET':
-                response = requests.get(url, headers=headers, cookies=cookies)
-            elif method == 'POST':
-                response = requests.post(url, json=data, headers=headers, cookies=cookies)
-            elif method == 'PUT':
-                response = requests.put(url, json=data, headers=headers, cookies=cookies)
-            elif method == 'DELETE':
-                response = requests.delete(url, headers=headers, cookies=cookies)
+            # Use session if provided, otherwise create new request
+            if session:
+                if method == 'GET':
+                    response = session.get(url, headers=headers)
+                elif method == 'POST':
+                    response = session.post(url, json=data, headers=headers)
+                elif method == 'PUT':
+                    response = session.put(url, json=data, headers=headers)
+                elif method == 'DELETE':
+                    response = session.delete(url, headers=headers)
+            else:
+                if method == 'GET':
+                    response = requests.get(url, headers=headers)
+                elif method == 'POST':
+                    response = requests.post(url, json=data, headers=headers)
+                elif method == 'PUT':
+                    response = requests.put(url, json=data, headers=headers)
+                elif method == 'DELETE':
+                    response = requests.delete(url, headers=headers)
 
             print(f"   Status: {response.status_code}")
             
@@ -53,21 +64,21 @@ class MitteieAPITester:
                 try:
                     response_data = response.json()
                     self.log_test(name, True)
-                    return True, response_data
+                    return True, response_data, response
                 except:
                     self.log_test(name, True, "No JSON response")
-                    return True, {}
+                    return True, {}, response
             else:
                 try:
                     error_data = response.json()
                     self.log_test(name, False, f"Expected {expected_status}, got {response.status_code}: {error_data}")
                 except:
                     self.log_test(name, False, f"Expected {expected_status}, got {response.status_code}")
-                return False, {}
+                return False, {}, response
 
         except Exception as e:
             self.log_test(name, False, f"Exception: {str(e)}")
-            return False, {}
+            return False, {}, None
 
     def test_signup(self):
         """Test user signup"""
