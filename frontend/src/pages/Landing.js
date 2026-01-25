@@ -8,10 +8,8 @@ export default function Landing() {
   const slides = [
     { type: "image-text", slide: 1 },
     { type: "reflection", slide: 2 },
-    { type: "image-text", slide: 3 },
-    { type: "consequence", slide: 4 },
-    { type: "transition", slide: 5 },
-    { type: "closing", slide: 6 },
+    { type: "consequence", slide: 3 },
+    { type: "closing", slide: 4 },
   ];
 
   const handleNext = () => {
@@ -53,100 +51,76 @@ export default function Landing() {
             </div>
             <div className="max-w-md mx-auto">
               <p className="text-2xl md:text-3xl font-playfair text-foreground leading-relaxed text-center">
-                Verdier finnes i både smått og stort
+                Verdier finnes i både smått og stort.
               </p>
             </div>
           </div>
         )}
 
-        {/* Slide 2 - Reflection */}
+        {/* Slide 2 - Reflection (text only) */}
         {slide.type === "reflection" && (
           <div className="w-full max-w-lg space-y-16 animate-fade-in px-4">
             <div className="space-y-3">
-              <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed">
+              <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed text-center">
                 Noen ting har verdi fordi de kostet noe.
               </p>
-              <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed">
+              <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed text-center">
                 Andre fordi de betyr noe.
               </p>
             </div>
             
             <div className="pt-8">
-              <p className="text-lg md:text-xl font-inter text-muted-foreground leading-relaxed">
+              <p className="text-lg md:text-xl font-playfair text-muted-foreground leading-relaxed text-center">
                 Over tid blir det vanskelig å holde oversikten.
               </p>
             </div>
           </div>
         )}
 
-        {/* Slide 3 - Oversikt image */}
-        {slide.type === "image-text" && slide.slide === 3 && (
-          <div className="w-full max-w-xl space-y-12 animate-fade-in">
-            <div className="rounded-2xl overflow-hidden shadow-sm">
-              <img
-                src="https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/aksku1t0_Oversikt.png"
-                alt=""
-                className="w-full h-auto"
-                style={{ maxHeight: "55vh", objectFit: "cover" }}
-              />
-            </div>
-            <div className="max-w-md mx-auto">
-              <p className="text-2xl md:text-3xl font-playfair text-foreground leading-relaxed text-center">
-                Når ting samles, blir de synlige
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Slide 4 - Consequence */}
+        {/* Slide 3 - Consequence (text only) */}
         {slide.type === "consequence" && (
           <div className="w-full max-w-lg space-y-16 animate-fade-in px-4">
-            <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed">
+            <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed text-center">
               Oversikt blir viktig når noe endrer seg.
             </p>
             
-            <div className="space-y-4 pl-6">
-              <p className="text-lg md:text-xl font-inter text-foreground leading-relaxed">
+            <div className="space-y-4 text-center">
+              <p className="text-lg md:text-xl font-playfair text-foreground leading-relaxed">
                 Flytting.
               </p>
-              <p className="text-lg md:text-xl font-inter text-foreground leading-relaxed">
+              <p className="text-lg md:text-xl font-playfair text-foreground leading-relaxed">
                 Arv.
               </p>
-              <p className="text-lg md:text-xl font-inter text-foreground leading-relaxed">
+              <p className="text-lg md:text-xl font-playfair text-foreground leading-relaxed">
                 Skilsmisse.
               </p>
-              <p className="text-lg md:text-xl font-inter text-foreground leading-relaxed">
+              <p className="text-lg md:text-xl font-playfair text-foreground leading-relaxed">
                 Forsikring.
               </p>
             </div>
             
-            <p className="text-lg md:text-xl font-inter text-muted-foreground leading-relaxed pt-8">
+            <p className="text-lg md:text-xl font-playfair text-muted-foreground leading-relaxed text-center pt-8">
               Eller bare fordi tid går.
             </p>
           </div>
         )}
 
-        {/* Slide 5 - Transition */}
-        {slide.type === "transition" && (
-          <div className="w-full max-w-md space-y-12 animate-fade-in px-4">
-            <p className="text-lg md:text-xl font-inter text-muted-foreground leading-loose opacity-75">
-              Det meste finnes allerede.
-            </p>
-            
-            <div className="h-24"></div>
-            
-            <p className="text-lg md:text-xl font-inter text-muted-foreground leading-loose opacity-75">
-              Bare spredt.
-            </p>
-          </div>
-        )}
-
-        {/* Slide 6 - Closing */}
+        {/* Slide 4 - Oversikt image + closing */}
         {slide.type === "closing" && (
-          <div className="w-full max-w-lg space-y-20 animate-fade-in px-4">
-            <p className="text-xl md:text-2xl font-playfair text-foreground leading-relaxed">
-              Når ting samles underveis, er oversikten allerede der.
-            </p>
+          <div className="w-full max-w-2xl space-y-12 animate-fade-in">
+            <div className="rounded-3xl overflow-hidden shadow-sm">
+              <img
+                src="https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/aksku1t0_Oversikt.png"
+                alt=""
+                className="w-full h-auto"
+                style={{ maxHeight: "60vh", objectFit: "cover" }}
+              />
+            </div>
+            <div className="max-w-md mx-auto">
+              <p className="text-2xl md:text-3xl font-playfair text-foreground leading-relaxed text-center">
+                Når ting samles, blir de synlige.
+              </p>
+            </div>
           </div>
         )}
       </div>
