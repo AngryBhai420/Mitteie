@@ -214,27 +214,34 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-playfair font-semibold text-foreground tracking-tight">
-              Oversikt
-            </h2>
-            {isAuthenticated && user && (
-              <p className="text-muted-foreground mt-2 font-inter">
-                {user.name}
-              </p>
-            )}
-          </div>
-
-          <Button
-            onClick={handleAddClick}
-            className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-inter shadow-md"
-            data-testid="add-item-btn"
-          >
-            <Plus className="mr-2 h-5 w-5" />
-            Legg til
-          </Button>
+        <div className="mb-8">
+          <h2 className="text-3xl md:text-4xl font-playfair font-semibold text-foreground tracking-tight mb-3">
+            Oversikt
+          </h2>
+          {isAuthenticated && user ? (
+            <p className="text-muted-foreground mt-2 font-inter">
+              {user.name}
+            </p>
+          ) : (
+            <p className="text-muted-foreground mt-2 font-inter leading-relaxed">
+              Samle det viktigste underveis.<br />
+              Resten kan vente.
+            </p>
+          )}
         </div>
+
+        {isAuthenticated && (
+          <div className="mb-8 flex justify-end">
+            <Button
+              onClick={handleAddClick}
+              className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-inter shadow-md"
+              data-testid="add-item-btn"
+            >
+              <Plus className="mr-2 h-5 w-5" />
+              Legg til
+            </Button>
+          </div>
+        )}
 
         {totalValue > 0 && (
           <div className="mb-8 p-6 bg-white border border-border rounded-xl shadow-sm">
@@ -254,21 +261,34 @@ export default function Dashboard() {
                 className="aspect-[4/3] mb-8 rounded-xl overflow-hidden shadow-md"
                 style={{
                   backgroundImage:
-                    "url('https://images.pexels.com/photos/19905186/pexels-photo-19905186.jpeg?auto=compress&cs=tinysrgb&w=800')",
+                    "url('https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/aksku1t0_Oversikt.png')",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               ></div>
-              <p className="text-lg text-muted-foreground font-inter mb-6">
-                Ingen eiendeler ennå. Legg til noe for å samle oversikten.
+              <p className="text-lg text-muted-foreground font-inter mb-2">
+                Ingen eiendeler ennå.
               </p>
-              <button
-                onClick={handleAddClick}
-                className="px-8 py-3 rounded-full bg-accent text-accent-foreground hover:bg-accent/90 font-inter transition-colors duration-300"
-                data-testid="empty-add-item-btn"
-              >
-                Legg til første eiendel
-              </button>
+              <p className="text-sm text-muted-foreground font-inter mb-6">
+                Legg til noe for å samle oversikten.
+              </p>
+              {isAuthenticated ? (
+                <button
+                  onClick={handleAddClick}
+                  className="px-8 py-3 rounded-full bg-accent text-accent-foreground hover:bg-accent/90 font-inter transition-colors duration-300"
+                  data-testid="empty-add-item-btn"
+                >
+                  Legg til første eiendel
+                </button>
+              ) : (
+                <button
+                  onClick={handleAddClick}
+                  className="px-8 py-3 rounded-full bg-muted hover:bg-muted-foreground/10 text-foreground font-inter transition-colors duration-300"
+                  data-testid="empty-add-item-btn"
+                >
+                  Legg til første eiendel
+                </button>
+              )}
             </div>
           </div>
         ) : (
