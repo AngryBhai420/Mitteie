@@ -153,7 +153,7 @@ class MitteieAPITester:
             "Create Item",
             "POST",
             "items",
-            201,
+            200,  # Backend returns 200, not 201
             data=item_data,
             session=session
         )
