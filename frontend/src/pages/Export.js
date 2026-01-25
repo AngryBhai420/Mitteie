@@ -82,7 +82,16 @@ export default function Export() {
 
       {/* Print content */}
       <div className="max-w-4xl mx-auto px-12 py-12">
-        <div className="mb-12">
+        <div className="mb-8">
+          <p className="text-base text-muted-foreground font-inter leading-relaxed mb-6">
+            Når ting endrer seg, er det greit å ha oversikten samlet.
+          </p>
+          <p className="text-sm text-muted-foreground font-inter">
+            Du kan ta den med deg, og komme tilbake senere.
+          </p>
+        </div>
+
+        <div className="mb-12 border-t border-border pt-8">
           <h1 className="text-4xl font-playfair font-bold text-foreground mb-2">
             MITTEIE
           </h1>
@@ -95,7 +104,7 @@ export default function Export() {
             </p>
           )}
           <p className="text-sm text-muted-foreground font-inter">
-            Eksportert: {new Date().toLocaleDateString("nb-NO")}
+            {new Date().toLocaleDateString("nb-NO")}
           </p>
         </div>
 
@@ -172,8 +181,7 @@ export default function Export() {
 
         <div className="mt-12 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground font-inter">
-            Dette dokumentet er generert fra MITTEIE og inneholder en oversikt
-            over registrerte eiendeler per {new Date().toLocaleDateString("nb-NO")}.
+            Dette dokumentet er generert fra MITTEIE per {new Date().toLocaleDateString("nb-NO")}.
           </p>
         </div>
       </div>
