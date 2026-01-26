@@ -503,9 +503,10 @@ app.include_router(api_router)
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', 'http://localhost:3000').split(','),
+    allow_origins=["*"] if os.environ.get('CORS_ORIGINS') == '*' else os.environ.get('CORS_ORIGINS', 'http://localhost:3000').split(','),
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_origin_regex=r"https://.*\.emergentagent\.com" if os.environ.get('CORS_ORIGINS') == '*' else None,
 )
 
 # Configure logging
