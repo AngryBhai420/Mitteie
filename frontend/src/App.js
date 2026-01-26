@@ -8,6 +8,7 @@ import Export from "./pages/Export";
 import Subscription from "./pages/Subscription";
 import ImportPDF from "./pages/ImportPDF";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import About from "./pages/About";
 import AuthCallback from "./components/AuthCallback";
 import { Toaster } from "@/components/ui/sonner";
 import "./App.css";
@@ -31,6 +32,7 @@ function AppRouter() {
       <Route path="/subscription" element={<Subscription />} />
       <Route path="/import" element={<ImportPDF />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
+      <Route path="/about" element={<About />} />
     </Routes>
   );
 }
