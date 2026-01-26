@@ -6,6 +6,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Export from "./pages/Export";
 import Subscription from "./pages/Subscription";
+import ImportPDF from "./pages/ImportPDF";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import AuthCallback from "./components/AuthCallback";
 import { Toaster } from "@/components/ui/sonner";
@@ -28,6 +29,7 @@ function AppRouter() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/export" element={<Export />} />
       <Route path="/subscription" element={<Subscription />} />
+      <Route path="/import" element={<ImportPDF />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
     </Routes>
   );
