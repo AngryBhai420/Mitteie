@@ -5,6 +5,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Export from "./pages/Export";
+import Subscription from "./pages/Subscription";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import AuthCallback from "./components/AuthCallback";
 import { Toaster } from "@/components/ui/sonner";
 import "./App.css";
@@ -25,6 +27,8 @@ function AppRouter() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/export" element={<Export />} />
+      <Route path="/subscription" element={<Subscription />} />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
     </Routes>
   );
 }
