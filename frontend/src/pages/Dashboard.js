@@ -275,10 +275,20 @@ export default function Dashboard() {
           <h2 className="text-3xl md:text-4xl font-playfair font-semibold text-foreground tracking-tight mb-6">
             Oversikt
           </h2>
-          {!isAuthenticated && (
+          {!isAuthenticated ? (
             <p className="text-base md:text-lg text-muted-foreground font-inter leading-relaxed">
               Konto trengs først når noe skal lagres.
             </p>
+          ) : (
+            <div className="space-y-3">
+              {!user?.subscription_status && (
+                <p className="text-sm text-muted-foreground font-inter">
+                  <Link to="/subscription" className="text-foreground/70 hover:text-foreground/90 transition-colors">
+                    Lagring over tid
+                  </Link>
+                </p>
+              )}
+            </div>
           )}
         </div>
 
