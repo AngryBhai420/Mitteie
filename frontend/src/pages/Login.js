@@ -41,7 +41,6 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
     const redirectUrl = window.location.origin + '/dashboard';
     window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
   };
@@ -49,10 +48,10 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left Side - Form */}
-      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-24">
+      <div className="flex-1 flex flex-col justify-center px-8 sm:px-12 lg:px-20 xl:px-24">
         <div className="max-w-md w-full mx-auto">
-          <Link to="/" className="inline-block mb-12">
-            <h1 className="text-2xl font-playfair font-semibold tracking-tight text-foreground">
+          <Link to="/" className="inline-block mb-16">
+            <h1 className="text-xl font-playfair font-semibold tracking-tight text-foreground">
               MITTEIE
             </h1>
           </Link>
@@ -60,13 +59,13 @@ export default function Login() {
           <h2 className="text-3xl md:text-4xl font-playfair font-semibold text-foreground mb-3 tracking-tight">
             Logg inn
           </h2>
-          <p className="text-muted-foreground mb-8 font-inter">
-            Fortsett til oversikten
+          <p className="text-base text-muted-foreground mb-12 font-inter leading-relaxed">
+            Gå tilbake til oversikten
           </p>
 
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email" className="font-inter text-sm">
+              <Label htmlFor="email" className="font-inter text-sm text-foreground">
                 E-post
               </Label>
               <Input
@@ -75,13 +74,13 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-muted/50 border-transparent focus:border-accent focus:ring-0 rounded-lg font-inter"
+                className="bg-muted/30 border-border/50 focus:border-accent focus:ring-0 rounded-lg font-inter"
                 data-testid="login-email-input"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="font-inter text-sm">
+              <Label htmlFor="password" className="font-inter text-sm text-foreground">
                 Passord
               </Label>
               <Input
@@ -90,7 +89,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-muted/50 border-transparent focus:border-accent focus:ring-0 rounded-lg font-inter"
+                className="bg-muted/30 border-border/50 focus:border-accent focus:ring-0 rounded-lg font-inter"
                 data-testid="login-password-input"
               />
             </div>
@@ -98,17 +97,17 @@ export default function Login() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full py-6 font-inter shadow-sm"
+              className="w-full bg-muted/50 hover:bg-muted/70 text-foreground/70 rounded-full py-6 font-inter transition-all duration-500"
               data-testid="login-submit-btn"
             >
               {loading ? "Logger inn..." : "Logg inn"}
             </Button>
           </form>
 
-          <div className="mt-6">
+          <div className="mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border"></div>
+                <div className="w-full border-t border-border/30"></div>
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-4 bg-background text-muted-foreground font-inter">
@@ -121,7 +120,7 @@ export default function Login() {
               type="button"
               onClick={handleGoogleLogin}
               variant="outline"
-              className="w-full mt-6 rounded-full py-6 font-inter border-border hover:bg-muted/50"
+              className="w-full mt-8 rounded-full py-6 font-inter border-border/50 hover:bg-muted/30 text-foreground/70"
               data-testid="google-login-btn"
             >
               <Mail className="mr-2 h-4 w-4" />
@@ -129,11 +128,11 @@ export default function Login() {
             </Button>
           </div>
 
-          <p className="mt-8 text-center text-sm text-muted-foreground font-inter">
-            Har ikke konto?{" "}
+          <p className="mt-12 text-center text-sm text-muted-foreground font-inter">
+            Ingen konto ennå?{" "}
             <Link
               to="/signup"
-              className="text-accent hover:underline"
+              className="text-foreground/70 hover:text-foreground/90 transition-colors"
               data-testid="signup-link"
             >
               Opprett konto
@@ -143,12 +142,12 @@ export default function Login() {
       </div>
 
       {/* Right Side - Image */}
-      <div className="hidden lg:block lg:flex-1">
+      <div className="hidden lg:block lg:flex-1 relative">
         <div
-          className="h-full bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1685545517667-b7f8e77c5f5d?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200')",
+              "url('https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/9l4s546a_8558a30044f746ae707528c1fcb7e25de8ef4247d52582811f1e1838c73ed636.png')",
           }}
         ></div>
       </div>
