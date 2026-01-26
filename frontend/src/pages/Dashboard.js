@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { LogOut, FileText, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import ItemCard from "@/components/ItemCard";
+import Footer from "@/components/Footer";
 import {
   AlertDialog,
   AlertDialogAction,
