@@ -497,6 +497,147 @@ async def delete_item(item_id: str, user: User = Depends(get_current_user)):
     
     return {"message": "Item deleted"}
 
+
+# ========== STRIPE PAYMENT ROUTES ==========
+
+from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
+
+# Fixed payment packages - NEVER accept amounts from frontend
+PAYMENT_PACKAGES = {
+    "subscription": {"amount": 49.0, "currency": "NOK", "description": "Månedlig abonnement"},
+    "import": {"amount": 29.0, "currency": "NOK", "description": "Engangstillegg for PDF-import"}
+}
+
+class PaymentRequest(BaseModel):
+    package_id: str
+    origin_url: str
+
+@api_router.post("/payments/checkout")
+async def create_checkout_session(data: PaymentRequest, user: User = Depends(get_current_user)):
+    # Validate package
+    if data.package_id not in PAYMENT_PACKAGES:
+        raise HTTPException(status_code=400, detail="Invalid package")
+    
+    package = PAYMENT_PACKAGES[data.package_id]
+    
+    # Initialize Stripe
+    stripe_api_key = os.getenv("STRIPE_API_KEY")
+    if not stripe_api_key:
+        raise HTTPException(status_code=500, detail="Stripe not configured")
+    
+    webhook_url = f"{data.origin_url}/api/webhook/stripe"
+    stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
+    
+    # Create checkout session
+    success_url = f"{data.origin_url}/payment-success?session_id={{{{CHECKOUT_SESSION_ID}}}}"
+    cancel_url = f"{data.origin_url}/dashboard"
+    
+    checkout_request = CheckoutSessionRequest(
+        amount=package["amount"],
+        currency=package["currency"].lower(),
+        success_url=success_url,
+        cancel_url=cancel_url,
+        metadata={
+            "user_id": user.user_id,
+            "package_id": data.package_id,
+            "description": package["description"]
+        }
+    )
+    
+    session: CheckoutSessionResponse = await stripe_checkout.create_checkout_session(checkout_request)
+    
+    # Create payment transaction record
+    transaction_doc = {
+        "transaction_id": f"txn_{uuid.uuid4().hex[:12]}",
+        "session_id": session.session_id,
+        "user_id": user.user_id,
+        "package_id": data.package_id,
+        "amount": package["amount"],
+        "currency": package["currency"],
+        "payment_status": "pending",
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.payment_transactions.insert_one(transaction_doc)
+    
+    return {"url": session.url, "session_id": session.session_id}
+
+@api_router.get("/payments/status/{session_id}")
+async def get_payment_status(session_id: str, user: User = Depends(get_current_user)):
+    # Check if transaction exists
+    transaction = await db.payment_transactions.find_one(
+        {"session_id": session_id, "user_id": user.user_id},
+        {"_id": 0}
+    )
+    
+    if not transaction:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    
+    # If already completed, return cached status
+    if transaction.get("payment_status") == "paid":
+        return {"status": "complete", "payment_status": "paid", "package_id": transaction["package_id"]}
+    
+    # Poll Stripe for status
+    stripe_api_key = os.getenv("STRIPE_API_KEY")
+    webhook_url = f"https://dummy-webhook.com/stripe"  # Not used for status check
+    stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
+    
+    checkout_status: CheckoutStatusResponse = await stripe_checkout.get_checkout_status(session_id)
+    
+    # Update transaction if payment succeeded
+    if checkout_status.payment_status == "paid" and transaction.get("payment_status") != "paid":
+        await db.payment_transactions.update_one(
+            {"session_id": session_id},
+            {"$set": {
+                "payment_status": "paid",
+                "completed_at": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        
+        # Update user subscription status if subscription package
+        if transaction["package_id"] == "subscription":
+            await db.users.update_one(
+                {"user_id": user.user_id},
+                {"$set": {
+                    "subscription_status": "active",
+                    "subscription_started_at": datetime.now(timezone.utc).isoformat()
+                }}
+            )
+    
+    return {
+        "status": checkout_status.status,
+        "payment_status": checkout_status.payment_status,
+        "package_id": transaction["package_id"]
+    }
+
+@api_router.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    # Webhook handler for Stripe events
+    body = await request.body()
+    signature = request.headers.get("Stripe-Signature")
+    
+    stripe_api_key = os.getenv("STRIPE_API_KEY")
+    webhook_url = f"{request.base_url}/api/webhook/stripe"
+    stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
+    
+    try:
+        webhook_response = await stripe_checkout.handle_webhook(body, signature)
+        
+        # Update transaction status based on webhook
+        if webhook_response.payment_status == "paid":
+            await db.payment_transactions.update_one(
+                {"session_id": webhook_response.session_id},
+                {"$set": {
+                    "payment_status": "paid",
+                    "completed_at": datetime.now(timezone.utc).isoformat()
+                }}
+            )
+        
+        return {"status": "success"}
+    except Exception as e:
+        logger.error(f"Webhook error: {e}")
+        raise HTTPException(status_code=400, detail="Webhook processing failed")
+
 # Include the router in the main app
 app.include_router(api_router)
 
