@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
+import Footer from "@/components/Footer";
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="border-b border-border/30 bg-background">
         <div className="max-w-3xl mx-auto px-6 py-4">
@@ -15,7 +16,7 @@ export default function About() {
       </header>
 
       {/* Content */}
-      <main className="max-w-2xl mx-auto px-6 py-16">
+      <main className="flex-1 max-w-2xl mx-auto px-6 py-16">
         <div className="space-y-12">
           <div>
             <h2 className="text-3xl md:text-4xl font-playfair font-semibold text-foreground tracking-tight mb-12">
