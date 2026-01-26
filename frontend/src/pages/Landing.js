@@ -30,10 +30,17 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="px-8 py-8 md:px-16 md:py-10">
+      <header className="px-8 py-8 md:px-16 md:py-10 flex items-center justify-between">
         <h1 className="text-xl font-playfair font-semibold tracking-tight text-foreground">
           MITTEIE
         </h1>
+        <Link
+          to="/login"
+          className="text-sm text-muted-foreground/70 hover:text-foreground/60 font-inter transition-colors"
+          data-testid="landing-login-link"
+        >
+          Logg inn
+        </Link>
       </header>
 
       {/* Content Area */}
