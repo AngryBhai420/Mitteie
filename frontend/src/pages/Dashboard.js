@@ -1,11 +1,23 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, LogOut, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { LogOut, FileText, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import ItemCard from "@/components/ItemCard";
-import ItemModal from "@/components/ItemModal";
-import RequireAuthModal from "@/components/RequireAuthModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -14,14 +26,22 @@ export default function Dashboard() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [showItemModal, setShowItemModal] = useState(false);
-  const [showRequireAuth, setShowRequireAuth] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  
+  // Form state
+  const [navn, setNavn] = useState("");
+  const [kategori, setKategori] = useState("");
+  const [serienummer, setSerienummer] = useState("");
+  const [notat, setNotat] = useState("");
+  const [verdi, setVerdi] = useState("");
+  const [vedlegg, setVedlegg] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // If user data passed from auth flow, skip auth check
     if (location.state?.user) {
       setUser(location.state.user);
       setIsAuthenticated(true);
@@ -29,7 +49,6 @@ export default function Dashboard() {
       return;
     }
 
-    // Check auth via /auth/me
     const checkAuth = async () => {
       try {
         const response = await fetch(`${BACKEND_URL}/api/auth/me`, {
@@ -80,18 +99,25 @@ export default function Dashboard() {
     }
   };
 
-  const handleAddClick = () => {
-    if (!isAuthenticated) {
-      setShowRequireAuth(true);
-      return;
-    }
+  const resetForm = () => {
+    setNavn("");
+    setKategori("");
+    setSerienummer("");
+    setNotat("");
+    setVerdi("");
+    setVedlegg([]);
     setEditingItem(null);
-    setShowItemModal(true);
   };
 
   const handleEditClick = (item) => {
     setEditingItem(item);
-    setShowItemModal(true);
+    setNavn(item.navn || "");
+    setKategori(item.kategori || "");
+    setSerienummer(item.serienummer || "");
+    setNotat(item.notat || "");
+    setVerdi(item.verdi ? String(item.verdi) : "");
+    setVedlegg(item.vedlegg_urls || []);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleDeleteItem = async (itemId) => {
@@ -110,12 +136,30 @@ export default function Dashboard() {
     }
   };
 
-  const handleSaveItem = async (itemData) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!isAuthenticated) {
+      navigate("/signup");
+      return;
+    }
+
+    setSaving(true);
+
+    const itemData = {
+      navn,
+      kategori: kategori || null,
+      serienummer: serienummer || null,
+      notat: notat || null,
+      verdi: verdi ? parseFloat(verdi) : null,
+      valuta: "NOK",
+      vedlegg_urls: vedlegg,
+    };
+
     try {
       let response;
 
       if (editingItem) {
-        // Update
         response = await fetch(
           `${BACKEND_URL}/api/items/${editingItem.item_id}`,
           {
@@ -126,7 +170,6 @@ export default function Dashboard() {
           }
         );
       } else {
-        // Create
         response = await fetch(`${BACKEND_URL}/api/items`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -151,11 +194,24 @@ export default function Dashboard() {
         toast.success("Eiendel lagt til");
       }
 
-      setShowItemModal(false);
-      setEditingItem(null);
+      resetForm();
     } catch (error) {
       toast.error("Kunne ikke lagre eiendel");
+    } finally {
+      setSaving(false);
     }
+  };
+
+  const handleFileUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    toast.info("Filopplasting kommer i neste versjon");
+    e.target.value = null;
+  };
+
+  const handleRemoveAttachment = (index) => {
+    setVedlegg(vedlegg.filter((_, i) => i !== index));
   };
 
   const totalValue = items
@@ -176,10 +232,10 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-white/80 backdrop-blur-sm sticky top-0 z-40">
+      <header className="border-b border-border/30 bg-background sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/">
-            <h1 className="text-2xl font-playfair font-semibold tracking-tight text-foreground">
+            <h1 className="text-xl font-playfair font-semibold tracking-tight text-foreground">
               MITTEIE
             </h1>
           </Link>
@@ -189,8 +245,8 @@ export default function Dashboard() {
               <>
                 <Link to="/export">
                   <Button
-                    variant="outline"
-                    className="rounded-full font-inter"
+                    variant="ghost"
+                    className="text-muted-foreground/70 hover:text-foreground/60 font-inter text-sm"
                     data-testid="export-btn"
                   >
                     <FileText className="mr-2 h-4 w-4" />
@@ -200,7 +256,7 @@ export default function Dashboard() {
                 <Button
                   variant="ghost"
                   onClick={handleLogout}
-                  className="rounded-full font-inter"
+                  className="text-muted-foreground/70 hover:text-foreground/60 font-inter text-sm"
                   data-testid="logout-btn"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
@@ -213,7 +269,7 @@ export default function Dashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-12">
+      <main className="max-w-4xl mx-auto px-6 py-12">
         {/* Intro Section */}
         <div className="mb-16 max-w-lg">
           <h2 className="text-3xl md:text-4xl font-playfair font-semibold text-foreground tracking-tight mb-6">
@@ -221,12 +277,176 @@ export default function Dashboard() {
           </h2>
           {!isAuthenticated && (
             <p className="text-base md:text-lg text-muted-foreground font-inter leading-relaxed">
-              Samle det viktigste underveis.<br />
-              Resten kan vente.
+              Konto trengs først når noe skal lagres.
             </p>
           )}
         </div>
 
+        {/* Add Item Form - Always Visible */}
+        <div className="mb-16 p-8 bg-white/50 border border-border/30 rounded-2xl">
+          <h3 className="text-xl font-playfair font-semibold text-foreground mb-6">
+            {editingItem ? "Endre eiendel" : "Legg til eiendel"}
+          </h3>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="navn" className="font-inter text-sm text-foreground">
+                Navn
+              </Label>
+              <Input
+                id="navn"
+                value={navn}
+                onChange={(e) => setNavn(e.target.value)}
+                required
+                className="bg-background/50 border-border/50 focus:border-accent focus:ring-0 rounded-lg font-inter"
+                data-testid="item-navn-input"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="kategori" className="font-inter text-sm text-foreground">
+                  Kategori
+                </Label>
+                <Input
+                  id="kategori"
+                  value={kategori}
+                  onChange={(e) => setKategori(e.target.value)}
+                  placeholder="F.eks. Elektronikk"
+                  className="bg-background/50 border-border/50 focus:border-accent focus:ring-0 rounded-lg font-inter"
+                  data-testid="item-kategori-input"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="serienummer" className="font-inter text-sm text-foreground">
+                  Serienummer
+                </Label>
+                <Input
+                  id="serienummer"
+                  value={serienummer}
+                  onChange={(e) => setSerienummer(e.target.value)}
+                  className="bg-background/50 border-border/50 focus:border-accent focus:ring-0 rounded-lg font-inter font-mono text-sm"
+                  data-testid="item-serienummer-input"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="verdi" className="font-inter text-sm text-foreground">
+                Verdi (kr)
+              </Label>
+              <Input
+                id="verdi"
+                type="number"
+                step="0.01"
+                value={verdi}
+                onChange={(e) => setVerdi(e.target.value)}
+                className="bg-background/50 border-border/50 focus:border-accent focus:ring-0 rounded-lg font-inter"
+                data-testid="item-verdi-input"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="notat" className="font-inter text-sm text-foreground">
+                Notat
+              </Label>
+              <Textarea
+                id="notat"
+                value={notat}
+                onChange={(e) => setNotat(e.target.value)}
+                rows={3}
+                className="bg-background/50 border-border/50 focus:border-accent focus:ring-0 rounded-lg font-inter resize-none"
+                data-testid="item-notat-input"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-inter text-sm text-foreground">Vedlegg (bilde eller PDF)</Label>
+              <div className="space-y-3">
+                <div>
+                  <input
+                    type="file"
+                    id="file-upload"
+                    multiple
+                    accept="image/*,.pdf"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    disabled={uploading}
+                  />
+                  <label htmlFor="file-upload">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={uploading}
+                      className="w-full rounded-lg font-inter border-dashed border-border/50 hover:bg-muted/30"
+                      onClick={() => document.getElementById("file-upload").click()}
+                      data-testid="upload-attachment-btn"
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      {uploading ? "Laster opp..." : "Last opp fil"}
+                    </Button>
+                  </label>
+                </div>
+
+                {vedlegg.length > 0 && (
+                  <div className="space-y-2">
+                    {vedlegg.map((url, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                      >
+                        <span className="text-sm font-inter truncate flex-1 mr-3">
+                          Vedlegg {index + 1}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRemoveAttachment(index)}
+                          className="rounded-full hover:bg-destructive/10"
+                          data-testid={`remove-attachment-${index}`}
+                        >
+                          <X className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              {editingItem && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={resetForm}
+                  className="text-muted-foreground/70 hover:text-foreground/60 font-inter"
+                  data-testid="cancel-item-btn"
+                >
+                  Avbryt
+                </Button>
+              )}
+              <Button
+                type="submit"
+                disabled={saving || !navn}
+                className="bg-muted/50 hover:bg-muted/70 text-foreground/70 rounded-full font-inter px-8"
+                data-testid="save-item-btn"
+              >
+                {saving ? "Lagrer..." : "Legg til i oversikten"}
+              </Button>
+            </div>
+
+            {!isAuthenticated && (
+              <p className="text-sm text-muted-foreground font-inter pt-2">
+                For å lagre trenger du en konto.
+              </p>
+            )}
+          </form>
+        </div>
+
+        {/* Total Value */}
         {totalValue > 0 && (
           <div className="mb-12 p-8 bg-white/50 border border-border/30 rounded-2xl">
             <p className="text-sm text-muted-foreground font-inter mb-2">
@@ -238,46 +458,13 @@ export default function Dashboard() {
           </div>
         )}
 
-        {items.length === 0 ? (
-          <div className="text-center py-32">
-            <div className="max-w-lg mx-auto space-y-12">
-              <div
-                className="aspect-[4/3] rounded-2xl overflow-hidden shadow-sm"
-                style={{
-                  backgroundImage:
-                    "url('https://customer-assets.emergentagent.com/job_502a92c9-65ed-4535-905f-55676ff68ba7/artifacts/aksku1t0_Oversikt.png')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              ></div>
-              
-              {isAuthenticated && (
-                <div className="pt-8">
-                  <button
-                    onClick={handleAddClick}
-                    className="px-10 py-3 rounded-full bg-muted/50 hover:bg-muted/70 text-foreground/70 font-inter text-sm transition-all duration-500"
-                    data-testid="empty-add-item-btn"
-                  >
-                    Legg til første eiendel
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div>
-            {isAuthenticated && (
-              <div className="mb-8 flex justify-end">
-                <button
-                  onClick={handleAddClick}
-                  className="px-8 py-3 rounded-full bg-muted/50 hover:bg-muted/70 text-foreground/70 font-inter text-sm transition-all duration-500"
-                  data-testid="add-item-btn"
-                >
-                  Legg til
-                </button>
-              </div>
-            )}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Items List */}
+        {items.length > 0 && (
+          <div className="space-y-6">
+            <h3 className="text-xl font-playfair font-semibold text-foreground">
+              Lagrede eiendeler
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {items.map((item) => (
                 <ItemCard
                   key={item.item_id}
@@ -290,22 +477,6 @@ export default function Dashboard() {
           </div>
         )}
       </main>
-
-      {/* Modals */}
-      {showItemModal && (
-        <ItemModal
-          item={editingItem}
-          onSave={handleSaveItem}
-          onClose={() => {
-            setShowItemModal(false);
-            setEditingItem(null);
-          }}
-        />
-      )}
-
-      {showRequireAuth && (
-        <RequireAuthModal onClose={() => setShowRequireAuth(false)} />
-      )}
     </div>
   );
 }
